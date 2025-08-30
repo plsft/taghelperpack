@@ -1,9 +1,4 @@
-using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace TagHelperPack;
 
@@ -47,27 +42,20 @@ public class AuthzTagHelper : TagHelper
     /// An authorization policy name that must be satisfied in order for the current element to be rendered.
     /// </summary>
     [HtmlAttributeName(AspAuthzPolicyAttributeName)]
-    public string RequiredPolicy { get; set; }
+    public string? RequiredPolicy { get; set; }
 
     /// <summary>
     /// Gets or sets the <see cref="ViewContext"/>.
     /// </summary>
     [HtmlAttributeNotBound]
     [ViewContext]
-    public ViewContext ViewContext { get; set; }
+    public ViewContext ViewContext { get; set; } = default!;
 
     /// <inheritdoc />
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
     {
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context));
-        }
-
-        if (output == null)
-        {
-            throw new ArgumentNullException(nameof(output));
-        }
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(output);
 
         if (context.SuppressedByAspIf() || context.SuppressedByAspAuthz())
         {
