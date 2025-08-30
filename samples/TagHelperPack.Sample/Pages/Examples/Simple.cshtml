@@ -1,0 +1,575 @@
+@page "/examples/simple"
+@{
+    ViewData["Title"] = "Simple Tag Helper Examples";
+}
+
+<seo title="Simple TagHelperPack Examples - @ViewData["Title"]"
+     description="Basic working examples of TagHelperPack tag helpers that you can test immediately"
+     og-type="website" />
+
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/examples">Examples</a></li>
+            <li class="breadcrumb-item active">Simple Examples</li>
+        </ol>
+    </nav>
+
+    <h1>Simple Working Examples</h1>
+    <p class="lead">Basic examples you can test immediately</p>
+
+    <!-- Core Tag Helpers -->
+    <section class="mb-5">
+        <h2>Core Tag Helpers (Verified Working)</h2>
+        
+        <div class="card mb-3">
+            <div class="card-header">
+                <h4>asp-if - Conditional Rendering</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div asp-if="true" class="alert alert-success">
+                            ✅ This always shows (asp-if="true")
+                        </div>
+                        <div asp-if="false" class="alert alert-danger">
+                            ❌ This never shows (asp-if="false")
+                        </div>
+                        <div asp-if="@(DateTime.Now.Second % 2 == 0)" class="alert alert-info">
+                            ⏰ This shows on even seconds: @DateTime.Now.Second
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Code:</h6>
+                        <pre><code>&lt;div asp-if="true"&gt;Always shows&lt;/div&gt;
+&lt;div asp-if="false"&gt;Never shows&lt;/div&gt;
+&lt;div asp-if="@@(DateTime.Now.Second % 2 == 0)"&gt;
+    Shows on even seconds
+&lt;/div&gt;</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <h4>lazy - Image Lazy Loading</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Regular Image:</h6>
+                        <img src="https://picsum.photos/300/200?random=1" 
+                             alt="Regular image" 
+                             class="img-fluid mb-3" />
+                        
+                        <h6>Lazy Loaded Image:</h6>
+                        <img src="https://picsum.photos/300/200?random=2" 
+                             alt="Lazy loaded image" 
+                             lazy="true"
+                             class="img-fluid" />
+                             
+                        <small class="text-muted d-block mt-2">
+                            Check DevTools Network tab - lazy image loads when visible
+                        </small>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Code:</h6>
+                        <pre><code>&lt;img src="image.jpg" 
+     alt="Description" 
+     lazy="true" /&gt;</code></pre>
+                        
+                        <h6>Generated HTML:</h6>
+                        <pre><code>&lt;img src="image.jpg" 
+     alt="Description" 
+     loading="lazy" 
+     decoding="async" /&gt;</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <h4>time-ago - Relative Time</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Examples:</h6>
+                        <ul class="list-unstyled">
+                            <li>📅 <time-ago time-ago="@DateTime.Now.AddMinutes(-5)"></time-ago></li>
+                            <li>📅 <time-ago time-ago="@DateTime.Now.AddHours(-2)"></time-ago></li>
+                            <li>📅 <time-ago time-ago="@DateTime.Now.AddDays(-1)" show-tooltip="true"></time-ago></li>
+                            <li>📝 Posted <span time-ago="@DateTime.Now.AddHours(-6)">some time ago</span></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Code:</h6>
+                        <pre><code>&lt;time-ago time-ago="@@DateTime.Now.AddHours(-2)"&gt;&lt;/time-ago&gt;
+&lt;span time-ago="@@DateTime.Now.AddHours(-6)"&gt;Posted&lt;/span&gt;</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <h4>markdown - Markdown Rendering</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Rendered Output:</h6>
+                        <div class="border p-3">
+                            <markdown>
+# Sample Markdown
+
+This is **bold text** and this is *italic text*.
+
+## Features List
+- Easy to use
+- Safe HTML rendering  
+- Code syntax highlighting
+
+### Links
+[Visit our GitHub](https://github.com/plsft/taghelperpack)
+
+> This is a blockquote example
+                            </markdown>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Code:</h6>
+                        <pre><code>&lt;markdown&gt;
+# Sample Markdown
+
+This is **bold text** and *italic text*.
+
+## Features List
+- Easy to use
+- Safe HTML rendering  
+
+[Visit GitHub](https://github.com/plsft/taghelperpack)
+
+&gt; This is a blockquote
+&lt;/markdown&gt;</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Web API Examples -->
+    <section class="mb-5">
+        <h2>Modern Web API Examples</h2>
+        
+        <div class="card mb-3">
+            <div class="card-header">
+                <h4>web-share - Native Sharing</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Try these buttons:</h6>
+                        <div class="d-grid gap-2">
+                            <share-button share-title="TagHelperPack Examples"
+                                          share-text="Check out these modern tag helpers!"
+                                          fallback="copy"
+                                          class="btn btn-primary">
+                                📤 Share This Page
+                            </share-button>
+                            
+                            <button web-share="true"
+                                    share-title="Quick Share Test"
+                                    share-text="Testing the web share functionality"
+                                    fallback="twitter"
+                                    class="btn btn-outline-primary">
+                                🐦 Share to Twitter
+                            </button>
+                            
+                            <button web-share="true"
+                                    share-title="Copy Test"
+                                    share-text="This will copy to clipboard"
+                                    fallback="copy"
+                                    class="btn btn-outline-secondary">
+                                📋 Copy to Clipboard
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Code:</h6>
+                        <pre><code>&lt;share-button share-title="Page Title"
+              share-text="Description"
+              fallback="copy"&gt;
+    Share Button
+&lt;/share-button&gt;</code></pre>
+                        
+                        <div class="alert alert-info mt-3">
+                            <small>
+                                <strong>Note:</strong> On mobile devices with Web Share API support, 
+                                this will open the native share dialog. On desktop, it falls back 
+                                to copying to clipboard or opening social media links.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <h4>intersection-observe - Scroll Animations</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Scroll down to see animations:</h6>
+                        <div style="height: 200px; overflow-y: auto; border: 1px solid #dee2e6; padding: 10px;">
+                            <div style="height: 100px; background-color: #f8f9fa; margin-bottom: 20px; display: flex; align-items: center; justify-content: center;">
+                                Scroll down ⬇️
+                            </div>
+                            
+                            <div intersection-observe="true"
+                                 observe-enter-class="highlight-animation"
+                                 observe-once="true"
+                                 class="p-3 border rounded bg-primary text-white"
+                                 style="opacity: 0.3;">
+                                🎉 This animates when scrolled into view!
+                            </div>
+                            
+                            <div style="height: 100px; background-color: #f8f9fa; margin: 20px 0;"></div>
+                            
+                            <div intersection-observe="true"
+                                 observe-enter-class="slide-in-animation"
+                                 observe-once="true"
+                                 class="p-3 border rounded bg-success text-white"
+                                 style="transform: translateX(-100px); opacity: 0;">
+                                ✨ This slides in from the left!
+                            </div>
+                            
+                            <div style="height: 100px; background-color: #f8f9fa;"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Code:</h6>
+                        <pre><code>&lt;div intersection-observe="true"
+     observe-enter-class="highlight-animation"
+     observe-once="true"&gt;
+    Content animates when visible
+&lt;/div&gt;</code></pre>
+                        
+                        <h6>CSS Animations:</h6>
+                        <pre><code>.highlight-animation {
+    opacity: 1 !important;
+    transform: scale(1.05);
+    transition: all 0.3s ease;
+}
+
+.slide-in-animation {
+    transform: translateX(0) !important;
+    opacity: 1 !important;
+    transition: all 0.5s ease;
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- JSON-LD Example -->
+    <section class="mb-5">
+        <h2>SEO & Structured Data</h2>
+        
+        <div class="card mb-3">
+            <div class="card-header">
+                <h4>json-ld - Structured Data</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        @{
+                            var sampleOrg = new {
+                                name = "TagHelperPack",
+                                url = "https://github.com/plsft/taghelperpack",
+                                description = "Modern tag helpers for ASP.NET Core",
+                                founder = new {
+                                    name = "Development Team"
+                                }
+                            };
+                        }
+                        
+                        <json-ld type="Organization" data="sampleOrg" />
+                        
+                        <div class="alert alert-success">
+                            ✅ JSON-LD structured data has been added to this page!
+                        </div>
+                        <p>Check the page source or DevTools to see the generated JSON-LD script tag.</p>
+                        
+                        <button class="btn btn-outline-primary" onclick="showPageSource()">
+                            View Generated JSON-LD
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Code:</h6>
+                        <pre><code>@@{
+    var orgData = new {
+        name = "Company Name",
+        url = "https://example.com",
+        description = "Company description"
+    };
+}
+
+&lt;json-ld type="Organization" data="orgData" /&gt;</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PWA Example -->
+    <section class="mb-5">
+        <h2>Progressive Web App</h2>
+        
+        <div class="card mb-3">
+            <div class="card-header">
+                <h4>pwa-install - App Installation</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Install Button:</h6>
+                        <pwa-install install-text="Install TagHelperPack Demo"
+                                     installed-text="Demo App Installed"
+                                     auto-prompt="false"
+                                     installable-class="btn-success"
+                                     installed-class="btn-secondary"
+                                     class="btn btn-primary">
+                            📱 Install Demo App
+                        </pwa-install>
+                        
+                        <div class="alert alert-info mt-3">
+                            <small>
+                                <strong>Note:</strong> PWA installation requires:
+                                <ul class="mb-0">
+                                    <li>HTTPS (or localhost)</li>
+                                    <li>Web app manifest</li>
+                                    <li>Service worker</li>
+                                </ul>
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Code:</h6>
+                        <pre><code>&lt;pwa-install install-text="Install App"
+             auto-prompt="false"
+             class="btn btn-primary"&gt;
+    Install App
+&lt;/pwa-install&gt;</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Accessibility Examples -->
+    <section class="mb-5">
+        <h2>Accessibility Features</h2>
+        
+        <div class="card mb-3">
+            <div class="card-header">
+                <h4>a11y-* - Accessibility Attributes</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Accessible Button:</h6>
+                        <button a11y-role="button"
+                                a11y-label="Save all document changes"
+                                a11y-description="This button will save your current work"
+                                class="btn btn-success mb-3">
+                            💾 Save Document
+                        </button>
+                        
+                        <h6>Progress Bar:</h6>
+                        <div a11y-role="progressbar"
+                             a11y-valuemin="0"
+                             a11y-valuemax="100"
+                             a11y-valuenow="75"
+                             a11y-valuetext="75 percent complete"
+                             class="progress mb-3">
+                            <div class="progress-bar" style="width: 75%"></div>
+                        </div>
+                        
+                        <h6>Live Region:</h6>
+                        <div id="liveRegion" 
+                             a11y-live="polite" 
+                             a11y-role="status"
+                             class="alert alert-info">
+                            Status messages appear here
+                        </div>
+                        
+                        <button class="btn btn-outline-primary" onclick="updateStatus()">
+                            Update Status
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Code:</h6>
+                        <pre><code>&lt;button a11y-role="button"
+        a11y-label="Save document"
+        a11y-description="Saves your work"&gt;
+    Save
+&lt;/button&gt;
+
+&lt;div a11y-role="progressbar"
+     a11y-valuemin="0"
+     a11y-valuemax="100"
+     a11y-valuenow="75"&gt;
+    Progress Bar
+&lt;/div&gt;</code></pre>
+                        
+                        <div class="alert alert-info mt-3">
+                            <small>
+                                <strong>Screen Reader:</strong> Use a screen reader to test
+                                the enhanced accessibility features.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Performance Monitoring -->
+    <section class="mb-5" 
+             perf-monitor="true" 
+             perf-critical="true">
+        <h2>Performance Monitoring</h2>
+        
+        <div class="card">
+            <div class="card-header">
+                <h4>perf-monitor - Performance Tracking</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Monitored Content:</h6>
+                        <div perf-monitor="true" 
+                             perf-budget="1000"
+                             perf-callback="logPerformance"
+                             class="card p-3 mb-3">
+                            <h6>Performance Monitored Section</h6>
+                            <p>This section is being monitored for performance with a 1 second budget.</p>
+                            @for (int i = 0; i < 10; i++)
+                            {
+                                <div class="bg-light p-2 mb-1 rounded">Content item @(i + 1)</div>
+                            }
+                        </div>
+                        
+                        <button class="btn btn-outline-primary" onclick="showPerformanceLog()">
+                            Show Performance Log
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Code:</h6>
+                        <pre><code>&lt;div perf-monitor="true" 
+     perf-budget="1000"
+     perf-callback="logPerformance"&gt;
+    Content being monitored
+&lt;/div&gt;</code></pre>
+                        
+                        <h6>Performance Log:</h6>
+                        <div id="performanceOutput" 
+                             class="bg-dark text-light p-3 rounded"
+                             style="height: 200px; overflow-y: auto; font-family: monospace; font-size: 0.8rem;">
+                            <div class="text-success">[INIT] Performance monitoring ready</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<style>
+.highlight-animation {
+    opacity: 1 !important;
+    transform: scale(1.05);
+    background-color: #ffc107 !important;
+    transition: all 0.3s ease;
+}
+
+.slide-in-animation {
+    transform: translateX(0) !important;
+    opacity: 1 !important;
+    transition: all 0.5s ease;
+}
+</style>
+
+<script>
+let statusCounter = 0;
+
+function updateStatus() {
+    const liveRegion = document.getElementById('liveRegion');
+    statusCounter++;
+    
+    const messages = [
+        `✅ Status update #${statusCounter}: Operation completed successfully`,
+        `ℹ️ Status update #${statusCounter}: Processing your request`,
+        `⚠️ Status update #${statusCounter}: Please review your input`,
+        `🎉 Status update #${statusCounter}: Welcome to the demo!`
+    ];
+    
+    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+    liveRegion.textContent = randomMessage;
+}
+
+function logPerformance(metrics) {
+    const log = document.getElementById('performanceOutput');
+    const timestamp = new Date().toLocaleTimeString();
+    const budgetStatus = metrics.exceedsBudget ? ' [BUDGET EXCEEDED]' : ' [OK]';
+    const textClass = metrics.exceedsBudget ? 'text-danger' : 'text-info';
+    
+    const entry = document.createElement('div');
+    entry.className = textClass;
+    entry.textContent = `[${timestamp}] Performance: ${metrics.duration.toFixed(2)}ms${budgetStatus}`;
+    
+    log.appendChild(entry);
+    log.scrollTop = log.scrollHeight;
+}
+
+function showPerformanceLog() {
+    const log = document.getElementById('performanceOutput');
+    log.scrollIntoView({ behavior: 'smooth' });
+}
+
+function showPageSource() {
+    // Find and display the JSON-LD script
+    const jsonLdScripts = document.querySelectorAll('script[type="application/ld+json"]');
+    let content = '';
+    
+    jsonLdScripts.forEach((script, index) => {
+        content += `JSON-LD Script ${index + 1}:\n${script.textContent}\n\n`;
+    });
+    
+    if (content) {
+        alert(content);
+    } else {
+        alert('No JSON-LD scripts found on this page.');
+    }
+}
+
+// Initialize performance monitoring
+window.addEventListener('load', function() {
+    console.log('Simple examples page loaded - all basic tag helpers active');
+    
+    // Log initial performance
+    setTimeout(() => {
+        logPerformance({
+            duration: performance.now(),
+            exceedsBudget: false
+        });
+    }, 100);
+});
+</script>

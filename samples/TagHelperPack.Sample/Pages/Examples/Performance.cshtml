@@ -1,0 +1,524 @@
+@page "/examples/performance"
+@model TagHelperPack.Sample.Pages.Examples.PerformanceModel
+@{
+    ViewData["Title"] = "Performance Examples";
+}
+
+<seo title="Performance Tag Helpers - @ViewData["Title"]"
+     description="Web performance monitoring, optimization techniques, and Core Web Vitals tracking examples"
+     og-type="website" />
+
+<div class="container-fluid" 
+     perf-monitor="true" 
+     perf-critical="true" 
+     perf-vitals="LCP,FID,CLS"
+     perf-budget="2000"
+     perf-callback="handleMainPerformance">
+    <div class="row">
+        <div class="col-md-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/examples">Examples</a></li>
+                    <li class="breadcrumb-item active">Performance</li>
+                </ol>
+            </nav>
+
+            <h1>Performance Tag Helper Examples</h1>
+            <p class="lead">Web Vitals monitoring, resource optimization, and performance budgets</p>
+
+            <!-- Performance Dashboard -->
+            <section class="mb-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Real-Time Performance Dashboard</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">LCP</h5>
+                                        <h2 id="lcpValue" class="text-primary">-</h2>
+                                        <p class="card-text">Largest Contentful Paint</p>
+                                        <small class="text-muted">Good: &lt;2.5s</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">FID</h5>
+                                        <h2 id="fidValue" class="text-success">-</h2>
+                                        <p class="card-text">First Input Delay</p>
+                                        <small class="text-muted">Good: &lt;100ms</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">CLS</h5>
+                                        <h2 id="clsValue" class="text-info">-</h2>
+                                        <p class="card-text">Cumulative Layout Shift</p>
+                                        <small class="text-muted">Good: &lt;0.1</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">TTFB</h5>
+                                        <h2 id="ttfbValue" class="text-warning">-</h2>
+                                        <p class="card-text">Time to First Byte</p>
+                                        <small class="text-muted">Good: &lt;600ms</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Resource Optimization -->
+            <section class="mb-5">
+                <h2>Resource Optimization Examples</h2>
+                
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h4>Resource Preloading & Hints</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Preloaded Images:</h5>
+                                <!-- These images will have preload hints -->
+                                <div class="mb-3">
+                                    <img src="https://picsum.photos/400/200?random=10" 
+                                         alt="Preloaded hero image"
+                                         perf-preload="preload"
+                                         perf-critical="true"
+                                         class="img-fluid rounded"
+                                         loading="eager" />
+                                </div>
+                                
+                                <h5 class="mt-4">Lazy Loaded Gallery:</h5>
+                                <div class="row">
+                                    @for (int i = 11; i <= 16; i++)
+                                    {
+                                        <div class="col-md-4 mb-3">
+                                            <img src="https://picsum.photos/200/150?random=@i" 
+                                                 alt="Gallery image @i"
+                                                 lazy="true"
+                                                 lazy-placeholder="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='150'%3E%3Crect width='100%25' height='100%25' fill='%23f8f9fa'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle' fill='%23666'%3ELoading...%3C/text%3E%3C/svg%3E"
+                                                 class="img-fluid rounded"
+                                                 perf-observe="true" />
+                                        </div>
+                                    }
+                                </div>
+                                
+                                <h5 class="mt-4">External Resource Hints:</h5>
+                                <div perf-hints="preconnect:https://fonts.googleapis.com,dns-prefetch:https://cdnjs.cloudflare.com">
+                                    <p>This section preconnects to Google Fonts and DNS prefetches cdnjs.</p>
+                                    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Performance Monitoring:</h5>
+                                <div perf-monitor="true" 
+                                     perf-budget="1500"
+                                     perf-callback="handleSectionPerformance"
+                                     class="card p-3">
+                                    <h6>Monitored Section</h6>
+                                    <p>This section is being performance monitored with a 1.5s budget.</p>
+                                    <div class="progress mb-3">
+                                        <div class="progress-bar bg-success" style="width: 85%">Performance Score: 85%</div>
+                                    </div>
+                                    <button class="btn btn-primary" onclick="simulateSlowOperation()">
+                                        Simulate Slow Operation
+                                    </button>
+                                </div>
+
+                                <h5 class="mt-4">Resource Loading Test:</h5>
+                                <div class="mb-3">
+                                    <button class="btn btn-outline-primary" onclick="loadMoreImages()">
+                                        Load More Images
+                                    </button>
+                                    <button class="btn btn-outline-secondary" onclick="measureResourceTiming()">
+                                        Measure Resources
+                                    </button>
+                                </div>
+                                
+                                <div id="dynamicImages" class="mt-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Performance Budgets -->
+            <section class="mb-5">
+                <h2>Performance Budget Examples</h2>
+                
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h4>Budget Monitoring</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card border-success" 
+                                     perf-monitor="true" 
+                                     perf-budget="500"
+                                     perf-callback="handleFastSection">
+                                    <div class="card-body">
+                                        <h6 class="card-title text-success">Fast Section (500ms budget)</h6>
+                                        <p class="card-text">This section has a tight performance budget.</p>
+                                        <small class="text-muted">Expected: &lt;500ms</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card border-warning" 
+                                     perf-monitor="true" 
+                                     perf-budget="1000"
+                                     perf-callback="handleMediumSection">
+                                    <div class="card-body">
+                                        <h6 class="card-title text-warning">Medium Section (1s budget)</h6>
+                                        <p class="card-text">This section has a moderate performance budget.</p>
+                                        <small class="text-muted">Expected: &lt;1000ms</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card border-danger" 
+                                     perf-monitor="true" 
+                                     perf-budget="2000"
+                                     perf-callback="handleSlowSection">
+                                    <div class="card-body">
+                                        <h6 class="card-title text-danger">Heavy Section (2s budget)</h6>
+                                        <p class="card-text">This section has complex content with a generous budget.</p>
+                                        <div class="row mt-3">
+                                            @for (int i = 1; i <= 6; i++)
+                                            {
+                                                <div class="col-6 mb-2">
+                                                    <div class="bg-light p-2 rounded">Item @i</div>
+                                                </div>
+                                            }
+                                        </div>
+                                        <small class="text-muted">Expected: &lt;2000ms</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Critical Resource Loading -->
+            <section class="mb-5">
+                <h2>Critical Resource Loading</h2>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Above-the-fold Critical Content</h4>
+                    </div>
+                    <div class="card-body" 
+                         perf-critical="true" 
+                         perf-monitor="true">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Critical CSS Test</h5>
+                                <style>
+                                    .critical-content {
+                                        background: linear-gradient(45deg, #007bff, #6610f2);
+                                        color: white;
+                                        padding: 2rem;
+                                        border-radius: 0.5rem;
+                                        margin-bottom: 1rem;
+                                    }
+                                    .metric-card {
+                                        transition: transform 0.2s ease;
+                                    }
+                                    .metric-card:hover {
+                                        transform: translateY(-2px);
+                                    }
+                                </style>
+                                
+                                <div class="critical-content">
+                                    <h6>Critical Above-the-fold Content</h6>
+                                    <p>This content is marked as critical and should load first.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Performance Metrics</h5>
+                                <div id="metricsContainer">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <div class="card metric-card h-100">
+                                                <div class="card-body text-center">
+                                                    <h6 class="card-title">Page Load</h6>
+                                                    <div id="pageLoadTime" class="h4 text-primary">-</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <div class="card metric-card h-100">
+                                                <div class="card-body text-center">
+                                                    <h6 class="card-title">DOM Ready</h6>
+                                                    <div id="domReadyTime" class="h4 text-success">-</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <button class="btn btn-outline-primary" onclick="exportPerformanceData()">
+                                    Export Performance Data
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Performance Log -->
+            <section class="mb-5">
+                <h2>Performance Event Log</h2>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5>Real-time Performance Events</h5>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="clearPerformanceLog()">
+                                Clear Log
+                            </button>
+                        </div>
+                        <div id="performanceLog" 
+                             class="bg-dark text-light p-3 rounded" 
+                             style="height: 300px; overflow-y: auto; font-family: monospace; font-size: 0.9rem;">
+                            <div class="text-success">[INIT] Performance monitoring initialized</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</div>
+
+<script>
+let performanceData = {};
+let logContainer;
+
+// Performance callback handlers
+function handleMainPerformance(metrics) {
+    logPerformance('MAIN', metrics);
+}
+
+function handleSectionPerformance(metrics) {
+    logPerformance('SECTION', metrics);
+}
+
+function handleFastSection(metrics) {
+    logPerformance('FAST', metrics);
+}
+
+function handleMediumSection(metrics) {
+    logPerformance('MEDIUM', metrics);
+}
+
+function handleSlowSection(metrics) {
+    logPerformance('SLOW', metrics);
+}
+
+function logPerformance(section, metrics) {
+    if (!logContainer) {
+        logContainer = document.getElementById('performanceLog');
+    }
+    
+    const timestamp = new Date().toLocaleTimeString();
+    const exceedsBudget = metrics.exceedsBudget ? ' (BUDGET EXCEEDED)' : '';
+    const budgetClass = metrics.exceedsBudget ? 'text-danger' : 'text-info';
+    
+    const logEntry = document.createElement('div');
+    logEntry.className = budgetClass;
+    logEntry.innerHTML = `[${timestamp}] [${section}] Duration: ${metrics.duration.toFixed(2)}ms${exceedsBudget}`;
+    
+    logContainer.appendChild(logEntry);
+    logContainer.scrollTop = logContainer.scrollHeight;
+    
+    // Store performance data
+    performanceData[section] = performanceData[section] || [];
+    performanceData[section].push({
+        timestamp: Date.now(),
+        duration: metrics.duration,
+        exceedsBudget: metrics.exceedsBudget
+    });
+}
+
+// Web Vitals display updates
+function updateWebVitals() {
+    // This would be called by the actual Web Vitals measurements
+    // For demo purposes, we'll simulate some values
+    
+    if (window.performanceMonitor && window.performanceMonitor.getMetrics) {
+        const metrics = window.performanceMonitor.getMetrics();
+        
+        if (metrics.LCP) {
+            document.getElementById('lcpValue').textContent = (metrics.LCP.value / 1000).toFixed(2) + 's';
+            document.getElementById('lcpValue').className = metrics.LCP.value < 2500 ? 'text-success' : 'text-warning';
+        }
+        
+        if (metrics.FID) {
+            document.getElementById('fidValue').textContent = metrics.FID.value.toFixed(1) + 'ms';
+            document.getElementById('fidValue').className = metrics.FID.value < 100 ? 'text-success' : 'text-warning';
+        }
+        
+        if (metrics.CLS) {
+            document.getElementById('clsValue').textContent = metrics.CLS.value.toFixed(3);
+            document.getElementById('clsValue').className = metrics.CLS.value < 0.1 ? 'text-success' : 'text-warning';
+        }
+    }
+}
+
+// Simulate slow operation
+function simulateSlowOperation() {
+    const startTime = performance.now();
+    
+    // Simulate work
+    setTimeout(() => {
+        const endTime = performance.now();
+        const duration = endTime - startTime;
+        
+        logPerformance('SIMULATION', {
+            duration: duration,
+            exceedsBudget: duration > 1000
+        });
+    }, Math.random() * 2000 + 500);
+}
+
+// Load more images dynamically
+let imageCounter = 20;
+function loadMoreImages() {
+    const container = document.getElementById('dynamicImages');
+    
+    for (let i = 0; i < 3; i++) {
+        imageCounter++;
+        const img = document.createElement('img');
+        img.src = `https://picsum.photos/150/100?random=${imageCounter}`;
+        img.className = 'img-fluid rounded m-1';
+        img.alt = `Dynamic image ${imageCounter}`;
+        img.loading = 'lazy';
+        container.appendChild(img);
+    }
+    
+    logPerformance('DYNAMIC', {
+        duration: 0,
+        exceedsBudget: false
+    });
+}
+
+// Measure resource timing
+function measureResourceTiming() {
+    const resources = performance.getEntriesByType('resource');
+    const recentResources = resources.slice(-10); // Last 10 resources
+    
+    let totalSize = 0;
+    let totalDuration = 0;
+    
+    recentResources.forEach(resource => {
+        totalDuration += resource.duration;
+        if (resource.transferSize) {
+            totalSize += resource.transferSize;
+        }
+        
+        logPerformance('RESOURCE', {
+            duration: resource.duration,
+            exceedsBudget: resource.duration > 1000
+        });
+    });
+    
+    const avgDuration = totalDuration / recentResources.length;
+    logPerformance('RESOURCE_AVG', {
+        duration: avgDuration,
+        exceedsBudget: avgDuration > 500
+    });
+}
+
+// Export performance data
+function exportPerformanceData() {
+    const data = {
+        timestamp: new Date().toISOString(),
+        metrics: window.performanceMonitor ? window.performanceMonitor.getMetrics() : {},
+        sections: performanceData,
+        navigation: performance.getEntriesByType('navigation')[0],
+        resources: performance.getEntriesByType('resource').map(r => ({
+            name: r.name,
+            duration: r.duration,
+            transferSize: r.transferSize,
+            type: r.initiatorType
+        }))
+    };
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `performance-report-${Date.now()}.json`;
+    a.click();
+    
+    URL.revokeObjectURL(url);
+    
+    logPerformance('EXPORT', {
+        duration: 0,
+        exceedsBudget: false
+    });
+}
+
+// Clear performance log
+function clearPerformanceLog() {
+    if (logContainer) {
+        logContainer.innerHTML = '<div class="text-success">[CLEARED] Performance log cleared</div>';
+    }
+    performanceData = {};
+}
+
+// Initialize page metrics
+function initializePageMetrics() {
+    const navigation = performance.getEntriesByType('navigation')[0];
+    
+    if (navigation) {
+        const pageLoadTime = navigation.loadEventEnd - navigation.navigationStart;
+        const domReadyTime = navigation.domContentLoadedEventEnd - navigation.navigationStart;
+        
+        document.getElementById('pageLoadTime').textContent = pageLoadTime.toFixed(0) + 'ms';
+        document.getElementById('domReadyTime').textContent = domReadyTime.toFixed(0) + 'ms';
+        
+        logPerformance('PAGE', {
+            duration: pageLoadTime,
+            exceedsBudget: pageLoadTime > 3000
+        });
+    }
+}
+
+// Initialize everything when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    logContainer = document.getElementById('performanceLog');
+    
+    // Initialize page metrics
+    setTimeout(initializePageMetrics, 100);
+    
+    // Update Web Vitals periodically
+    setInterval(updateWebVitals, 2000);
+    
+    // Log initial state
+    logPerformance('INIT', {
+        duration: 0,
+        exceedsBudget: false
+    });
+});
+
+// Set up performance monitoring endpoint
+window.performanceEndpoint = '/api/performance';
+</script>

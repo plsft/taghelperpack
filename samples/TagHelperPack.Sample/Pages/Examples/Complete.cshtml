@@ -1,0 +1,627 @@
+@page "/examples/complete"
+@model TagHelperPack.Sample.Pages.Examples.CompleteModel
+@{
+    ViewData["Title"] = "Complete Demo";
+}
+
+<seo title="Complete TagHelperPack Demo - E-commerce Product Page"
+     description="A comprehensive demonstration of all TagHelperPack features in a realistic e-commerce product page scenario"
+     canonical="@Url.Page("/Examples/Complete")"
+     og-title="TagHelperPack Complete Demo"
+     og-description="See all tag helpers working together in a real-world scenario"
+     og-image="https://picsum.photos/1200/630?random=100"
+     og-type="product" />
+
+@{
+    var productData = new {
+        name = "Premium Wireless Headphones",
+        description = "High-quality wireless headphones with noise cancellation",
+        brand = new {
+            name = "AudioTech"
+        },
+        offers = new {
+            type = "Offer",
+            price = "299.99",
+            priceCurrency = "USD",
+            availability = "https://schema.org/InStock"
+        },
+        aggregateRating = new {
+            type = "AggregateRating",
+            ratingValue = "4.8",
+            reviewCount = "152"
+        }
+    };
+}
+
+<json-ld type="Product" data="productData" />
+
+<div class="container-fluid" 
+     perf-monitor="true" 
+     perf-critical="true"
+     perf-vitals="LCP,FID,CLS">
+     
+    <!-- Hero Section -->
+    <section class="hero-section mb-5" 
+             intersection-observe="true"
+             observe-enter-class="animate__animated animate__fadeIn"
+             observe-once="true">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1 class="display-4" 
+                    class-if="@Model.IsFeatured:text-primary,featured-product">
+                    @Model.Product.Name
+                </h1>
+                <p class="lead">@Model.Product.ShortDescription</p>
+                
+                <div class="d-flex align-items-center mb-3">
+                    <div class="me-3">
+                        <span class="h2 text-primary">$@Model.Product.Price</span>
+                        <span asp-if="@Model.Product.HasDiscount" class="text-muted text-decoration-line-through ms-2">
+                            $@Model.Product.OriginalPrice
+                        </span>
+                    </div>
+                    <span asp-if="@Model.Product.HasDiscount" class="badge bg-danger">
+                        @Model.Product.DiscountPercent% OFF
+                    </span>
+                </div>
+
+                <div class="mb-3">
+                    <span class="text-warning">
+                        ⭐⭐⭐⭐⭐ @Model.Product.Rating (@Model.Product.ReviewCount reviews)
+                    </span>
+                </div>
+
+                <div class="d-flex gap-2 mb-3">
+                    <button class="btn btn-primary btn-lg" 
+                            class-unless="@Model.Product.InStock:btn-disabled,opacity-50"
+                            asp-if="@Model.Product.InStock">
+                        🛒 Add to Cart
+                    </button>
+                    
+                    <div asp-if="@(!Model.Product.InStock)" class="alert alert-warning">
+                        Out of stock - <button class="btn btn-link p-0">Notify when available</button>
+                    </div>
+                    
+                    <share-button share-title="@Model.Product.Name"
+                                  share-text="Check out this amazing product!"
+                                  fallback="copy"
+                                  class="btn btn-outline-secondary">
+                        📤 Share
+                    </share-button>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="product-images">
+                    <!-- Hero image with preloading -->
+                    <img src="@Model.Product.MainImageUrl" 
+                         alt="@Model.Product.Name"
+                         class="img-fluid rounded shadow-lg mb-3"
+                         perf-preload="preload"
+                         perf-critical="true" />
+                    
+                    <!-- Thumbnail gallery with lazy loading -->
+                    <div class="row">
+                        @foreach(var image in Model.Product.Images.Take(4))
+                        {
+                            <div class="col-3">
+                                <img src="@image.Url" 
+                                     alt="@image.Alt"
+                                     class="img-fluid rounded thumbnail"
+                                     lazy="true"
+                                     lazy-placeholder="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='75'%3E%3Crect width='100%25' height='100%25' fill='%23f8f9fa'/%3E%3C/svg%3E"
+                                     onclick="changeMainImage('@image.Url')" />
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Details -->
+    <section class="mb-5">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs" a11y-role="tablist">
+                            <li class="nav-item" a11y-role="presentation">
+                                <button class="nav-link active" 
+                                        a11y-role="tab"
+                                        a11y-controls="description"
+                                        a11y-selected="true"
+                                        onclick="switchProductTab('description')">
+                                    Description
+                                </button>
+                            </li>
+                            <li class="nav-item" a11y-role="presentation">
+                                <button class="nav-link" 
+                                        a11y-role="tab"
+                                        a11y-controls="specifications"
+                                        a11y-selected="false"
+                                        onclick="switchProductTab('specifications')">
+                                    Specifications
+                                </button>
+                            </li>
+                            <li class="nav-item" a11y-role="presentation">
+                                <button class="nav-link" 
+                                        a11y-role="tab"
+                                        a11y-controls="reviews"
+                                        a11y-selected="false"
+                                        onclick="switchProductTab('reviews')">
+                                    Reviews (@Model.Product.ReviewCount)
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div id="description" a11y-role="tabpanel" class="tab-content active">
+                            <markdown allow-html="false">@Model.Product.MarkdownDescription</markdown>
+                        </div>
+                        
+                        <div id="specifications" a11y-role="tabpanel" class="tab-content d-none">
+                            <table class="table">
+                                <tbody>
+                                    @foreach(var spec in Model.Product.Specifications)
+                                    {
+                                        <tr>
+                                            <td><strong>@spec.Key</strong></td>
+                                            <td>@spec.Value</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div id="reviews" a11y-role="tabpanel" class="tab-content d-none">
+                            <!-- Virtual scrolling for large review list -->
+                            <virtual-list item-height="120"
+                                          container-height="400"
+                                          item-count="@Model.Product.ReviewCount"
+                                          item-renderer="renderReview"
+                                          overscan="3"
+                                          container-class="border rounded">
+                            </virtual-list>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <!-- Purchase Form -->
+                <div class="card sticky-top">
+                    <div class="card-header">
+                        <h5>Purchase Options</h5>
+                    </div>
+                    <div class="card-body">
+                        <reactive-form name="purchaseForm" 
+                                       validate-on-blur="true"
+                                       persist-state="false"
+                                       validation-schema='{
+                                           "quantity": { "required": true, "min": 1, "max": 10 },
+                                           "color": { "required": true },
+                                           "warranty": { "required": false }
+                                       }'
+                                       default-values='{"quantity": 1, "color": "black"}'>
+                            
+                            <div class="mb-3">
+                                <label for="quantity" class="form-label">Quantity</label>
+                                <input type="number" 
+                                       name="quantity" 
+                                       id="quantity"
+                                       class="form-control" 
+                                       min="1" 
+                                       max="10" 
+                                       value="1">
+                                <div data-error-for="quantity" class="invalid-feedback"></div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="color" class="form-label">Color</label>
+                                <select name="color" id="color" class="form-select">
+                                    <option value="">Choose color...</option>
+                                    <option value="black">Midnight Black</option>
+                                    <option value="white">Arctic White</option>
+                                    <option value="blue">Ocean Blue</option>
+                                    <option value="red">Ruby Red</option>
+                                </select>
+                                <div data-error-for="color" class="invalid-feedback"></div>
+                            </div>
+
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" 
+                                       name="warranty" 
+                                       id="warranty" 
+                                       class="form-check-input"
+                                       value="extended">
+                                <label for="warranty" class="form-check-label">
+                                    Extended Warranty (+$49.99)
+                                </label>
+                            </div>
+
+                            <button type="submit" class="btn btn-success w-100 mb-2">
+                                💳 Buy Now - $@Model.Product.Price
+                            </button>
+                            
+                            <button type="button" class="btn btn-outline-primary w-100">
+                                ❤️ Add to Wishlist
+                            </button>
+                        </reactive-form>
+
+                        <!-- PWA Install -->
+                        <div class="mt-3 pt-3 border-top">
+                            <pwa-install install-text="Install Shop App"
+                                         auto-prompt="false"
+                                         installable-class="btn-outline-success"
+                                         class="btn btn-outline-secondary w-100">
+                                📱 Get Mobile App
+                            </pwa-install>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section with Scroll Animation -->
+    <section class="mb-5"
+             intersection-observe="true"
+             observe-enter-class="animate__animated animate__slideInUp"
+             observe-threshold="0.3">
+        <h2>Customer Reviews</h2>
+        
+        <div class="row">
+            @foreach(var review in Model.Product.Reviews.Take(3))
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100"
+                         intersection-observe="true"
+                         observe-enter-class="animate__animated animate__zoomIn"
+                         observe-once="true">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-2">
+                                <strong>@review.CustomerName</strong>
+                                <div class="ms-auto">
+                                    <span class="text-warning">
+                                        @for(int i = 1; i <= 5; i++)
+                                        {
+                                            @if(i <= review.Rating)
+                                            {
+                                                <span>⭐</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">☆</span>
+                                            }
+                                        }
+                                    </span>
+                                </div>
+                            </div>
+                            <time-ago time-ago="@review.CreatedAt" 
+                                      show-tooltip="true"
+                                      class="text-muted small d-block mb-2">
+                            </time-ago>
+                            <markdown>@review.Content</markdown>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+
+    <!-- Related Products -->
+    <section class="mb-5">
+        <h2>Related Products</h2>
+        <div class="row">
+            @foreach(var product in Model.RelatedProducts)
+            {
+                <div class="col-md-3 mb-3">
+                    <web-component name="product-card"
+                                   shadow-dom="false"
+                                   props='{"name": "@product.Name", "price": "@product.Price", "image": "@product.ImageUrl"}'
+                                   styles="
+                                       .product-card {
+                                           border: 1px solid #dee2e6;
+                                           border-radius: 0.375rem;
+                                           overflow: hidden;
+                                           transition: transform 0.2s ease, box-shadow 0.2s ease;
+                                       }
+                                       .product-card:hover {
+                                           transform: translateY(-2px);
+                                           box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                                       }
+                                       .product-image {
+                                           width: 100%;
+                                           height: 200px;
+                                           object-fit: cover;
+                                       }
+                                       .product-info {
+                                           padding: 1rem;
+                                       }
+                                       .product-name {
+                                           font-size: 1.1rem;
+                                           font-weight: 600;
+                                           margin-bottom: 0.5rem;
+                                       }
+                                       .product-price {
+                                           font-size: 1.25rem;
+                                           color: #0d6efd;
+                                           font-weight: bold;
+                                       }
+                                   "
+                                   script="
+                                       const name = this.getAttribute('name');
+                                       const price = this.getAttribute('price');
+                                       const image = this.getAttribute('image');
+                                       
+                                       this.querySelector('.product-name').textContent = name;
+                                       this.querySelector('.product-price').textContent = '$' + price;
+                                       this.querySelector('.product-image').src = image;
+                                       this.querySelector('.product-image').alt = name;
+                                   ">
+                        <div class="product-card">
+                            <img class="product-image" src="" alt="" lazy="true" />
+                            <div class="product-info">
+                                <div class="product-name"></div>
+                                <div class="product-price"></div>
+                                <button class="btn btn-outline-primary btn-sm mt-2 w-100">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    </web-component>
+                </div>
+            }
+        </div>
+    </section>
+
+    <!-- Customer Support Chat -->
+    <div class="position-fixed bottom-0 end-0 p-3">
+        <button class="btn btn-primary rounded-circle chat-button"
+                a11y-role="button"
+                a11y-label="Open customer support chat"
+                a11y-expanded="false"
+                onclick="toggleChat()">
+            💬
+        </button>
+        
+        <div id="chatWidget" 
+             class="chat-widget card d-none"
+             a11y-role="dialog"
+             a11y-label="Customer Support Chat"
+             a11y-focus="auto">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">Customer Support</h6>
+                <button class="btn btn-sm btn-outline-secondary" 
+                        onclick="toggleChat()"
+                        a11y-label="Close chat">
+                    ✕
+                </button>
+            </div>
+            <div class="card-body" style="height: 300px; overflow-y: auto;">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="mb-2">
+                        <small class="text-muted">
+                            <time-ago time-ago="@DateTime.Now.AddMinutes(-5)"></time-ago>
+                        </small>
+                        <div class="alert alert-info small mb-2">
+                            👋 Hi! How can we help you today?
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="input-group">
+                    <input type="text" 
+                           class="form-control" 
+                           placeholder="Type your message..."
+                           id="chatInput"
+                           onkeypress="handleChatKeypress(event)">
+                    <button class="btn btn-primary" onclick="sendChatMessage()">
+                        Send
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<style>
+.featured-product {
+    background: linear-gradient(45deg, #007bff, #6610f2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-section {
+    min-height: 50vh;
+    display: flex;
+    align-items: center;
+}
+
+.thumbnail {
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.thumbnail:hover {
+    opacity: 0.8;
+}
+
+.chat-button {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.chat-widget {
+    width: 350px;
+    max-height: 500px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.animate__fadeIn {
+    animation: fadeIn 1s ease-out;
+}
+
+.animate__slideInUp {
+    animation: slideInUp 0.8s ease-out;
+}
+
+.animate__zoomIn {
+    animation: zoomIn 0.5s ease-out;
+}
+
+@@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@@keyframes slideInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@@keyframes zoomIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+</style>
+
+<script>
+// Product functionality
+function changeMainImage(newSrc) {
+    const mainImage = document.querySelector('.product-images img:first-child');
+    if (mainImage) {
+        mainImage.src = newSrc;
+    }
+}
+
+// Tab functionality
+function switchProductTab(tabName) {
+    const tabs = document.querySelectorAll('[role="tab"]');
+    const panels = document.querySelectorAll('[role="tabpanel"]');
+    
+    tabs.forEach(tab => {
+        tab.classList.remove('active');
+        tab.setAttribute('aria-selected', 'false');
+    });
+    
+    panels.forEach(panel => {
+        panel.classList.add('d-none');
+        panel.classList.remove('active');
+    });
+    
+    const activeTab = document.querySelector(`[aria-controls="${tabName}"]`);
+    const activePanel = document.getElementById(tabName);
+    
+    if (activeTab && activePanel) {
+        activeTab.classList.add('active');
+        activeTab.setAttribute('aria-selected', 'true');
+        activePanel.classList.remove('d-none');
+        activePanel.classList.add('active');
+    }
+}
+
+// Chat functionality
+let chatOpen = false;
+
+function toggleChat() {
+    const chatWidget = document.getElementById('chatWidget');
+    const chatButton = document.querySelector('.chat-button');
+    
+    chatOpen = !chatOpen;
+    
+    if (chatOpen) {
+        chatWidget.classList.remove('d-none');
+        chatButton.setAttribute('aria-expanded', 'true');
+        setTimeout(() => {
+            document.getElementById('chatInput').focus();
+        }, 100);
+    } else {
+        chatWidget.classList.add('d-none');
+        chatButton.setAttribute('aria-expanded', 'false');
+        chatButton.focus();
+    }
+}
+
+function handleChatKeypress(event) {
+    if (event.key === 'Enter') {
+        sendChatMessage();
+    }
+}
+
+function sendChatMessage() {
+    const input = document.getElementById('chatInput');
+    const messages = document.getElementById('chatMessages');
+    
+    if (input.value.trim()) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'mb-2';
+        messageDiv.innerHTML = `
+            <small class="text-muted">Just now</small>
+            <div class="alert alert-primary small mb-2">
+                ${input.value}
+            </div>
+        `;
+        
+        messages.appendChild(messageDiv);
+        messages.scrollTop = messages.scrollHeight;
+        
+        input.value = '';
+        
+        // Simulate response
+        setTimeout(() => {
+            const responseDiv = document.createElement('div');
+            responseDiv.className = 'mb-2';
+            responseDiv.innerHTML = `
+                <small class="text-muted">Just now</small>
+                <div class="alert alert-secondary small mb-2">
+                    Thank you for your message! A representative will be with you shortly.
+                </div>
+            `;
+            messages.appendChild(responseDiv);
+            messages.scrollTop = messages.scrollHeight;
+        }, 1500);
+    }
+}
+
+// Virtual list renderer for reviews
+const reviewsData = [
+    @foreach(var review in Model.Product.Reviews)
+    {
+        <text>{ customerName: '@review.CustomerName', rating: @review.Rating, content: '@Html.Raw(review.Content.Replace("'", "\\'"))' },</text>
+    }
+];
+
+function renderReview(index) {
+    const review = reviewsData[index % reviewsData.length];
+    
+    const stars = '⭐'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+    
+    return `
+        <div class="border-bottom p-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <strong>${review.customerName}</strong>
+                <span class="text-warning">${stars}</span>
+            </div>
+            <p class="mb-1">${review.content}</p>
+            <small class="text-muted">Review ${index + 1} of ${reviewsData.length}</small>
+        </div>
+    `;
+}
+
+// Performance monitoring
+function handleMainPerformance(metrics) {
+    console.log('Main section performance:', metrics);
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Complete demo page loaded with all tag helpers active');
+});
+</script>

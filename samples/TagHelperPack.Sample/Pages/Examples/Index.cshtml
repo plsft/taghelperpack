@@ -1,0 +1,416 @@
+@page "/examples"
+@model TagHelperPack.Sample.Pages.Examples.IndexModel
+@{
+    ViewData["Title"] = "TagHelperPack Examples";
+}
+
+<seo title="@ViewData["Title"] - Complete Tag Helper Examples"
+     description="Comprehensive examples of all TagHelperPack tag helpers including modern web APIs, React-inspired components, and accessibility features"
+     og-type="website" />
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <nav class="examples-nav sticky-top">
+                <h5>Tag Helper Examples</h5>
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#core-helpers">Core Helpers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#modern-web">Modern Web APIs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#react-inspired">React-Inspired</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#accessibility">Accessibility</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#performance">Performance</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        
+        <div class="col-md-9">
+            <div class="examples-content">
+                
+                <!-- Header with PWA Install -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h1>TagHelperPack Examples</h1>
+                        <p class="lead">Interactive examples of all tag helpers</p>
+                    </div>
+                    <pwa-install install-text="Install Demo App" 
+                                 auto-prompt="false"
+                                 installable-class="btn-success">
+                        Install App
+                    </pwa-install>
+                </div>
+
+                <!-- Core Helpers Section -->
+                <section id="core-helpers" class="mb-5">
+                    <h2>Core Conditional Helpers</h2>
+                    
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h4>asp-if - Conditional Rendering</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Code:</h5>
+                                    <pre><code>&lt;div asp-if="@Model.ShowSuccess" class="alert alert-success"&gt;
+    Success message is shown!
+&lt;/div&gt;
+
+&lt;div asp-if="@(!Model.ShowSuccess)" class="alert alert-info"&gt;
+    Click the button to show success
+&lt;/div&gt;</code></pre>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Result:</h5>
+                                    <div asp-if="@Model.ShowSuccess" class="alert alert-success">
+                                        ✅ Success message is shown!
+                                    </div>
+                                    <div asp-if="@(!Model.ShowSuccess)" class="alert alert-info">
+                                        ℹ️ Click the button to show success
+                                    </div>
+                                    <button class="btn btn-primary" onclick="toggleSuccess()">Toggle Success</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h4>asp-authz - Authorization Based Rendering</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Code:</h5>
+                                    <pre><code>&lt;div asp-authz="false" class="alert alert-warning"&gt;
+    Please log in to access premium features
+&lt;/div&gt;
+
+&lt;div asp-authz="true" class="alert alert-success"&gt;
+    Welcome, authenticated user!
+&lt;/div&gt;</code></pre>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Result:</h5>
+                                    <div asp-authz="false" class="alert alert-warning">
+                                        🔒 Please log in to access premium features
+                                    </div>
+                                    <div asp-authz="true" class="alert alert-success">
+                                        👋 Welcome, authenticated user!
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Modern Web APIs Section -->
+                <section id="modern-web" class="mb-5">
+                    <h2>Modern Web API Helpers</h2>
+                    
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h4>lazy - Image Lazy Loading</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Code:</h5>
+                                    <pre><code>&lt;img src="https://picsum.photos/400/300?random=1" 
+     alt="Lazy loaded image" 
+     lazy="true" 
+     class="img-fluid" /&gt;
+
+&lt;img src="https://picsum.photos/400/300?random=2" 
+     alt="With placeholder" 
+     lazy="true"
+     lazy-placeholder="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='100%25' height='100%25' fill='%23ddd'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3ELoading...%3C/text%3E%3C/svg%3E"
+     class="img-fluid" /&gt;</code></pre>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Result:</h5>
+                                    <div class="mb-3">
+                                        <img src="https://picsum.photos/400/300?random=1" 
+                                             alt="Lazy loaded image" 
+                                             lazy="true" 
+                                             class="img-fluid" />
+                                    </div>
+                                    <div>
+                                        <img src="https://picsum.photos/400/300?random=2" 
+                                             alt="With placeholder" 
+                                             lazy="true"
+                                             lazy-placeholder="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='100%25' height='100%25' fill='%23ddd'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3ELoading...%3C/text%3E%3C/svg%3E"
+                                             class="img-fluid" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h4>web-share - Native Sharing</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Code:</h5>
+                                    <pre><code>&lt;share-button share-title="TagHelperPack Examples"
+              share-text="Check out these amazing tag helper examples!"
+              share-url="@Url.Page("/Examples/Index")"
+              fallback="copy"
+              class="btn btn-primary"&gt;
+    Share This Page
+&lt;/share-button&gt;
+
+&lt;button web-share="true" 
+        share-title="Quick Share"
+        share-text="Simple sharing example"
+        fallback="twitter"
+        class="btn btn-outline-primary"&gt;
+    Quick Share
+&lt;/button&gt;</code></pre>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Result:</h5>
+                                    <div class="mb-3">
+                                        <share-button share-title="TagHelperPack Examples"
+                                                      share-text="Check out these amazing tag helper examples!"
+                                                      share-url="@Url.Page("/Examples/Index")"
+                                                      fallback="copy"
+                                                      class="btn btn-primary">
+                                            📤 Share This Page
+                                        </share-button>
+                                    </div>
+                                    <div>
+                                        <button web-share="true" 
+                                                share-title="Quick Share"
+                                                share-text="Simple sharing example"
+                                                fallback="twitter"
+                                                class="btn btn-outline-primary">
+                                            🐦 Quick Share
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h4>intersection-observe - Scroll Animations</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Code:</h5>
+                                    <pre><code>&lt;div intersection-observe="true"
+     observe-enter-class="animate__animated animate__fadeInUp"
+     observe-once="true"
+     class="card"&gt;
+    Content animates when scrolled into view
+&lt;/div&gt;</code></pre>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Result:</h5>
+                                    <div style="height: 300px; overflow-y: scroll; border: 1px solid #ddd; padding: 20px;">
+                                        <div style="height: 200px; background: #f8f9fa; display: flex; align-items: center; justify-content: center;">
+                                            Scroll down to see animation
+                                        </div>
+                                        <div intersection-observe="true"
+                                             observe-enter-class="animate__animated animate__fadeInUp"
+                                             observe-once="true"
+                                             class="card p-3 mt-3"
+                                             style="opacity: 0;">
+                                            🎉 This content animates when scrolled into view!
+                                        </div>
+                                        <div style="height: 200px; background: #f8f9fa;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Time and Content Helpers -->
+                <section id="content-helpers" class="mb-5">
+                    <h2>Content Helpers</h2>
+                    
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h4>time-ago - Relative Time Display</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Code:</h5>
+                                    <pre><code>&lt;time-ago time-ago="@DateTime.Now.AddHours(-2)"&gt;&lt;/time-ago&gt;
+&lt;time-ago time-ago="@DateTime.Now.AddDays(-1)" show-tooltip="true"&gt;&lt;/time-ago&gt;
+&lt;span time-ago="@DateTime.Now.AddMinutes(-30)"&gt;Posted&lt;/span&gt;</code></pre>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Result:</h5>
+                                    <ul class="list-unstyled">
+                                        <li>📅 <time-ago time-ago="@DateTime.Now.AddHours(-2)"></time-ago></li>
+                                        <li>📅 <time-ago time-ago="@DateTime.Now.AddDays(-1)" show-tooltip="true"></time-ago></li>
+                                        <li>📝 <span time-ago="@DateTime.Now.AddMinutes(-30)">Posted</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h4>markdown - Markdown Rendering</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Code:</h5>
+                                    <pre><code>&lt;markdown&gt;
+# Hello World
+This is **bold** and this is *italic*.
+
+- List item 1
+- List item 2
+
+[Link example](https://example.com)
+&lt;/markdown&gt;</code></pre>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Result:</h5>
+                                    <div class="border p-3">
+                                        <markdown>
+# Hello World
+This is **bold** and this is *italic*.
+
+- List item 1  
+- List item 2
+
+[Link example](https://example.com)
+                                        </markdown>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h4>json-ld - Structured Data</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Code:</h5>
+                                    <pre><code>@@{
+    var orgData = new {
+        name = "TagHelperPack",
+        url = "https://github.com/plsft/taghelperpack",
+        description = "Modern tag helpers for ASP.NET Core"
+    };
+}
+
+&lt;json-ld type="Organization" data="orgData" /&gt;</code></pre>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Result:</h5>
+                                    @{
+                                        var orgData = new {
+                                            name = "TagHelperPack",
+                                            url = "https://github.com/plsft/taghelperpack", 
+                                            description = "Modern tag helpers for ASP.NET Core"
+                                        };
+                                    }
+                                    <json-ld type="Organization" data="orgData" />
+                                    <div class="alert alert-info">
+                                        <small>JSON-LD structured data has been added to the page head (check page source)</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Performance Section -->
+                <section id="performance" class="mb-5" 
+                         perf-monitor="true" 
+                         perf-critical="true">
+                    <h2>Performance Monitoring</h2>
+                    
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h4>perf-monitor - Performance Tracking</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Code:</h5>
+                                    <pre><code>&lt;div perf-monitor="true" 
+     perf-critical="true"
+     perf-budget="1000"
+     perf-callback="handlePerformance"&gt;
+    Critical content being monitored
+&lt;/div&gt;</code></pre>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Result:</h5>
+                                    <div perf-monitor="true" 
+                                         perf-budget="1000"
+                                         perf-callback="handlePerformance"
+                                         class="alert alert-info">
+                                        📊 This content is being performance monitored
+                                        <br><small>Check browser console for performance metrics</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.examples-nav {
+    top: 20px;
+}
+.animate__fadeInUp {
+    animation: fadeInUp 0.6s ease-out;
+    opacity: 1 !important;
+}
+@@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+
+<script>
+let showSuccess = @Model.ShowSuccess.ToString().ToLower();
+
+function toggleSuccess() {
+    // Simple page reload to toggle state
+    const url = new URL(window.location);
+    url.searchParams.set('showSuccess', !showSuccess);
+    window.location.href = url.toString();
+}
+
+function handlePerformance(metrics) {
+    console.log('Performance metrics:', metrics);
+}
+
+// Initialize performance monitoring endpoint
+window.performanceEndpoint = '/api/performance';
+</script>

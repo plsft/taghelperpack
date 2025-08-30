@@ -1,0 +1,449 @@
+@page "/examples/react"
+@model TagHelperPack.Sample.Pages.Examples.ReactInspiredModel
+@{
+    ViewData["Title"] = "React-Inspired Components";
+}
+
+<seo title="React-Inspired Tag Helpers - @ViewData["Title"]"
+     description="Explore React-like component patterns with ASP.NET Core tag helpers including reactive forms, web components, and virtual scrolling"
+     og-type="website" />
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/examples">Examples</a></li>
+                    <li class="breadcrumb-item active">React-Inspired Components</li>
+                </ol>
+            </nav>
+
+            <h1>React-Inspired Tag Helpers</h1>
+            <p class="lead">Component patterns inspired by modern JavaScript frameworks</p>
+
+            <!-- Reactive Forms -->
+            <section class="mb-5">
+                <h2>Reactive Forms</h2>
+                
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h4>reactive-form - React Hook Form Style</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Demo Form:</h5>
+                                <reactive-form name="userRegistration" 
+                                               validate-on-blur="true"
+                                               validate-on-change="false"
+                                               persist-state="true"
+                                               default-values='{"theme": "light", "newsletter": true}'
+                                               validation-schema='{"email": {"required": true, "pattern": "[^@]+@[^@]+\\.[^@]+"}, "password": {"required": true, "minLength": 8}, "confirmPassword": {"required": true, "minLength": 8}, "fullName": {"required": true, "minLength": 2}}'
+                                               error-messages='{"email": {"required": "Email is required", "pattern": "Please enter a valid email"}, "password": {"required": "Password is required", "minLength": "Password must be at least 8 characters"}, "fullName": {"required": "Full name is required", "minLength": "Name must be at least 2 characters"}}'>
+                                    
+                                    <div class="mb-3">
+                                        <label for="fullName" class="form-label">Full Name</label>
+                                        <input type="text" name="fullName" id="fullName" class="form-control" placeholder="John Doe">
+                                        <div data-error-for="fullName" class="invalid-feedback"></div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" name="email" id="email" class="form-control" placeholder="john@example.com">
+                                        <div data-error-for="email" class="invalid-feedback"></div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="password" class="form-label">Password</label>
+                                        <input type="password" name="password" id="password" class="form-control">
+                                        <div data-error-for="password" class="invalid-feedback"></div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                                        <input type="password" name="confirmPassword" id="confirmPassword" class="form-control">
+                                        <div data-error-for="confirmPassword" class="invalid-feedback"></div>
+                                    </div>
+
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" name="newsletter" id="newsletter" class="form-check-input">
+                                        <label for="newsletter" class="form-check-label">Subscribe to newsletter</label>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="theme" class="form-label">Theme Preference</label>
+                                        <select name="theme" id="theme" class="form-select">
+                                            <option value="light">Light</option>
+                                            <option value="dark">Dark</option>
+                                            <option value="auto">Auto</option>
+                                        </select>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary">Register</button>
+                                    <button type="button" class="btn btn-secondary ms-2" onclick="resetForm()">Reset</button>
+                                </reactive-form>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Features:</h5>
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <strong>Real-time Validation</strong>
+                                        <br><small>Validates on blur by default</small>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>State Persistence</strong>
+                                        <br><small>Form data saved to localStorage</small>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Custom Error Messages</strong>
+                                        <br><small>Configurable validation messages</small>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Default Values</strong>
+                                        <br><small>Pre-populate form fields</small>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Validation Schema</strong>
+                                        <br><small>JSON-based validation rules</small>
+                                    </li>
+                                </ul>
+
+                                <div class="mt-3">
+                                    <h6>Form State:</h6>
+                                    <pre id="formState" class="bg-light p-2 rounded"><code>{}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Web Components -->
+            <section class="mb-5">
+                <h2>Web Components</h2>
+                
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h4>web-component - Custom Elements</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Simple Counter Component:</h5>
+                                <web-component name="simple-counter" 
+                                               shadow-dom="true"
+                                               auto-register="true"
+                                               props='{"initial": 5, "step": 2}'
+                                               styles="
+                                                   .counter {
+                                                       border: 2px solid #007bff;
+                                                       border-radius: 8px;
+                                                       padding: 20px;
+                                                       text-align: center;
+                                                       font-family: Arial, sans-serif;
+                                                       background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+                                                   }
+                                                   .count {
+                                                       font-size: 2rem;
+                                                       font-weight: bold;
+                                                       color: #007bff;
+                                                       margin: 10px 0;
+                                                   }
+                                                   button {
+                                                       background: #007bff;
+                                                       color: white;
+                                                       border: none;
+                                                       padding: 8px 16px;
+                                                       margin: 0 5px;
+                                                       border-radius: 4px;
+                                                       cursor: pointer;
+                                                   }
+                                                   button:hover {
+                                                       background: #0056b3;
+                                                   }
+                                               "
+                                               script="
+                                                   this.count = parseInt(this.getAttribute('initial')) || 0;
+                                                   this.step = parseInt(this.getAttribute('step')) || 1;
+                                                   
+                                                   this.updateDisplay = () => {
+                                                       this.shadowRoot.querySelector('.count').textContent = this.count;
+                                                   };
+                                                   
+                                                   this.shadowRoot.querySelector('.increment').addEventListener('click', () => {
+                                                       this.count += this.step;
+                                                       this.updateDisplay();
+                                                   });
+                                                   
+                                                   this.shadowRoot.querySelector('.decrement').addEventListener('click', () => {
+                                                       this.count -= this.step;
+                                                       this.updateDisplay();
+                                                   });
+                                                   
+                                                   this.updateDisplay();
+                                               ">
+                                    <div class="counter">
+                                        <h3>Counter Component</h3>
+                                        <div class="count">0</div>
+                                        <button class="decrement">- Step</button>
+                                        <button class="increment">+ Step</button>
+                                    </div>
+                                </web-component>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Features:</h5>
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <strong>Shadow DOM</strong>
+                                        <br><small>Encapsulated styles and behavior</small>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Props Support</strong>
+                                        <br><small>Pass data as attributes</small>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Scoped Styles</strong>
+                                        <br><small>CSS doesn't leak out</small>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Custom Behavior</strong>
+                                        <br><small>JavaScript logic encapsulated</small>
+                                    </li>
+                                </ul>
+
+                                <div class="mt-3">
+                                    <h6>Usage:</h6>
+                                    <pre class="bg-light p-2 rounded"><code>&lt;simple-counter initial="5" step="2"&gt;&lt;/simple-counter&gt;</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Virtual Scrolling -->
+            <section class="mb-5">
+                <h2>Virtual Scrolling</h2>
+                
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h4>virtual-list - Performance Scrolling</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h5>Demo: 10,000 Items</h5>
+                                <virtual-list item-height="60"
+                                              container-height="400"
+                                              item-count="10000"
+                                              item-renderer="renderVirtualItem"
+                                              overscan="5"
+                                              container-class="border"
+                                              item-class="border-bottom p-3">
+                                </virtual-list>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>Performance Benefits:</h5>
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <strong>Only Renders Visible Items</strong>
+                                        <br><small>Handles 10k+ items smoothly</small>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Configurable Overscan</strong>
+                                        <br><small>Buffer for smooth scrolling</small>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Custom Item Renderer</strong>
+                                        <br><small>Flexible content generation</small>
+                                    </li>
+                                </ul>
+
+                                <div class="mt-3">
+                                    <button class="btn btn-outline-primary btn-sm" onclick="scrollToItem(0)">Top</button>
+                                    <button class="btn btn-outline-primary btn-sm" onclick="scrollToItem(5000)">Middle</button>
+                                    <button class="btn btn-outline-primary btn-sm" onclick="scrollToItem(9999)">Bottom</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Conditional Classes -->
+            <section class="mb-5">
+                <h2>Conditional Styling</h2>
+                
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h4>class-if / class-unless - Dynamic Classes</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Interactive Examples:</h5>
+                                
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="primarySwitch" onchange="updateClasses()">
+                                        <label class="form-check-label" for="primarySwitch">Primary Theme</label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="largeSwitch" onchange="updateClasses()">
+                                        <label class="form-check-label" for="largeSwitch">Large Size</label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="shadowSwitch" onchange="updateClasses()">
+                                        <label class="form-check-label" for="shadowSwitch">Shadow Effect</label>
+                                    </div>
+                                </div>
+
+                                <div id="dynamicBox" 
+                                     class="p-3 border rounded transition-all"
+                                     style="transition: all 0.3s ease;">
+                                    Dynamic styled content
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Simulated Tag Helper Code:</h5>
+                                <pre id="classIfCode" class="bg-light p-2 rounded"><code>&lt;div class="p-3 border rounded"
+     class-if="false:bg-primary,text-white;false:fs-4;false:shadow-lg"&gt;
+    Dynamic styled content
+&lt;/div&gt;</code></pre>
+
+                                <div class="mt-3">
+                                    <h6>Current Classes:</h6>
+                                    <div id="currentClasses" class="badge bg-secondary">p-3 border rounded</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</div>
+
+<style>
+.transition-all {
+    transition: all 0.3s ease;
+}
+
+.fs-4 {
+    font-size: 1.5rem;
+}
+</style>
+
+<script>
+// Form state tracking
+function updateFormState() {
+    const form = document.querySelector('[data-reactive-form="userRegistration"]');
+    if (form && form.reactiveForm) {
+        const state = form.reactiveForm.getState();
+        if (document.getElementById('formState')) {
+            document.getElementById('formState').innerHTML = JSON.stringify(state, null, 2);
+        }
+    }
+}
+
+// Virtual list item renderer
+function renderVirtualItem(index) {
+    const isEven = index % 2 === 0;
+    const bgClass = isEven ? 'bg-light' : 'bg-white';
+    return `
+        <div class="d-flex align-items-center ${bgClass}">
+            <div class="flex-shrink-0">
+                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                    ${index + 1}
+                </div>
+            </div>
+            <div class="flex-grow-1 ms-3">
+                <h6 class="mb-1">Item ${index + 1}</h6>
+                <p class="mb-0 text-muted">Description for item ${index + 1}</p>
+            </div>
+            <div class="flex-shrink-0">
+                <span class="badge ${isEven ? 'bg-primary' : 'bg-secondary'}">
+                    ${isEven ? 'Even' : 'Odd'}
+                </span>
+            </div>
+        </div>
+    `;
+}
+
+// Virtual scroll controls
+function scrollToItem(index) {
+    const container = document.querySelector('[data-virtual-scroll]');
+    if (container && container.virtualScroller) {
+        container.virtualScroller.scrollToIndex(index);
+    }
+}
+
+// Form reset
+function resetForm() {
+    const form = document.querySelector('[data-reactive-form="userRegistration"]');
+    if (form && form.reactiveForm) {
+        form.reactiveForm.reset();
+    }
+}
+
+// Dynamic class management
+function updateClasses() {
+    const primarySwitch = document.getElementById('primarySwitch');
+    const largeSwitch = document.getElementById('largeSwitch');
+    const shadowSwitch = document.getElementById('shadowSwitch');
+    const box = document.getElementById('dynamicBox');
+    const codeElement = document.getElementById('classIfCode');
+    const classesElement = document.getElementById('currentClasses');
+    
+    // Base classes
+    let classes = ['p-3', 'border', 'rounded', 'transition-all'];
+    
+    // Conditional classes
+    if (primarySwitch.checked) {
+        classes.push('bg-primary', 'text-white');
+    } else {
+        classes = classes.filter(c => !['bg-primary', 'text-white'].includes(c));
+    }
+    
+    if (largeSwitch.checked) {
+        classes.push('fs-4');
+    } else {
+        classes = classes.filter(c => c !== 'fs-4');
+    }
+    
+    if (shadowSwitch.checked) {
+        classes.push('shadow-lg');
+    } else {
+        classes = classes.filter(c => c !== 'shadow-lg');
+    }
+    
+    // Apply classes
+    box.className = classes.join(' ');
+    
+    // Update code display
+    const codeExample = `&lt;div class="p-3 border rounded"
+     class-if="${primarySwitch.checked}:bg-primary,text-white;${largeSwitch.checked}:fs-4;${shadowSwitch.checked}:shadow-lg"&gt;
+    Dynamic styled content
+&lt;/div&gt;`;
+    codeElement.innerHTML = codeExample;
+    
+    // Update current classes
+    classesElement.textContent = classes.join(' ');
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    // Update form state periodically
+    setInterval(updateFormState, 1000);
+    
+    // Initialize class demo
+    updateClasses();
+});
+</script>

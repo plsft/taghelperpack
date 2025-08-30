@@ -5,13 +5,90 @@
     ViewData["Title"] = "Tag Helper Pack Samples";
 }
 
-<h1>Tag Helper Pack Samples</h1>
-<p>A set of useful, and possibly opinionated, Tag Helpers for ASP.NET Core.</p>
-<p>Supported on ASP.NET Core 6.0, &amp; 7.0. Also supported on ASP.NET Core 2.1 when run on .NET Framework 4.7.1 or higher.</p>
-<p class="text-muted">This site running on ASP.NET Core @AspNetCoreVersion.CurrentVersion on @AspNetCoreVersion.OperatingSystemName</p>
+<seo title="TagHelperPack - Modern Tag Helpers for ASP.NET Core"
+     description="A comprehensive collection of modern, performance-focused Tag Helpers for ASP.NET Core applications supporting .NET 6.0, 8.0, and 9.0"
+     og-type="website" />
+
+<div class="jumbotron">
+    <h1 class="display-4">TagHelperPack</h1>
+    <p class="lead">A comprehensive collection of modern, performance-focused Tag Helpers for ASP.NET Core applications.</p>
+    <p>Now supports .NET 6.0, 8.0, and 9.0 with React-inspired components, modern web APIs, and accessibility features!</p>
+    <p class="text-muted">This site running on ASP.NET Core @AspNetCoreVersion.CurrentVersion on @AspNetCoreVersion.OperatingSystemName</p>
+    
+    <hr class="my-4">
+    
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5>🏷️ All Examples</h5>
+                    <p class="small">Complete tag helper reference</p>
+                    <a asp-page="/Examples/Index" class="btn btn-primary">View All</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5>⚛️ React-Inspired</h5>
+                    <p class="small">Component patterns & reactive forms</p>
+                    <a asp-page="/Examples/ReactInspired" class="btn btn-success">Explore</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5>♿ Accessibility</h5>
+                    <p class="small">ARIA attributes & keyboard nav</p>
+                    <a asp-page="/Examples/Accessibility" class="btn btn-info">Learn</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5>⚡ Performance</h5>
+                    <p class="small">Web Vitals & optimization</p>
+                    <a asp-page="/Examples/Performance" class="btn btn-warning">Monitor</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="text-center mt-4">
+        <a asp-page="/Examples/Complete" class="btn btn-lg btn-outline-primary">
+            🚀 Complete Demo - E-commerce Example
+        </a>
+    </div>
+</div>
+
+<h2>🌟 What's New</h2>
+<div class="row mb-4">
+    <div class="col-md-6">
+        <h4>Modern Web Features</h4>
+        <ul>
+            <li><strong>Native Lazy Loading</strong> - Browser-native image optimization</li>
+            <li><strong>Web Share API</strong> - Native sharing on mobile devices</li>
+            <li><strong>PWA Installation</strong> - Progressive web app prompts</li>
+            <li><strong>Intersection Observer</strong> - Efficient scroll animations</li>
+            <li><strong>Web Components</strong> - Custom elements with Shadow DOM</li>
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <h4>React-Inspired Patterns</h4>
+        <ul>
+            <li><strong>Reactive Forms</strong> - Real-time validation like React Hook Form</li>
+            <li><strong>Virtual Scrolling</strong> - Handle thousands of items efficiently</li>
+            <li><strong>Conditional Classes</strong> - Dynamic styling based on state</li>
+            <li><strong>Performance Monitoring</strong> - Core Web Vitals tracking</li>
+            <li><strong>Accessibility First</strong> - ARIA attributes and keyboard navigation</li>
+        </ul>
+    </div>
+</div>
 
 <h2>Installation &amp; Issues</h2>
-<p>See installation instructions and file issues at <a href="https://github.com/DamianEdwards/TagHelperPack">GitHub</a>.</p>
+<p>See installation instructions and file issues at <a href="https://github.com/plsft/taghelperpack">GitHub</a>.</p>
 
 <h2>Examples</h2>
 <h3>Field Template, Data Annotation, &amp; Model Tag Helpers</h3>

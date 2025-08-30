@@ -1,0 +1,659 @@
+@page "/examples/accessibility"
+@model TagHelperPack.Sample.Pages.Examples.AccessibilityModel
+@{
+    ViewData["Title"] = "Accessibility Examples";
+}
+
+<seo title="Accessibility Tag Helpers - @ViewData["Title"]"
+     description="Comprehensive accessibility examples using ARIA attributes, screen reader support, and keyboard navigation"
+     og-type="website" />
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/examples">Examples</a></li>
+                    <li class="breadcrumb-item active">Accessibility</li>
+                </ol>
+            </nav>
+
+            <div a11y-skip-link="Skip to main accessibility examples">
+                <h1>Accessibility Tag Helper Examples</h1>
+                <p class="lead">ARIA attributes, screen reader support, and keyboard navigation</p>
+            </div>
+
+            <!-- ARIA Basics -->
+            <section class="mb-5">
+                <h2>ARIA Attribute Examples</h2>
+                
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h4>Basic ARIA Attributes</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Interactive Button:</h5>
+                                <button a11y-role="button"
+                                        a11y-label="Save document changes"
+                                        a11y-description="This will save all current changes to the document"
+                                        class="btn btn-primary">
+                                    💾 Save Document
+                                </button>
+
+                                <h5 class="mt-4">Progress Indicator:</h5>
+                                <div a11y-role="progressbar"
+                                     a11y-valuemin="0"
+                                     a11y-valuemax="100"
+                                     a11y-valuenow="@Model.ProgressValue"
+                                     a11y-valuetext="@Model.ProgressValue% complete"
+                                     class="progress mb-3">
+                                    <div class="progress-bar" style="width: @(Model.ProgressValue)%"></div>
+                                </div>
+                                <button class="btn btn-sm btn-outline-secondary" onclick="updateProgress()">
+                                    Update Progress
+                                </button>
+
+                                <h5 class="mt-4">Navigation Menu:</h5>
+                                <nav a11y-role="navigation" a11y-label="Main navigation">
+                                    <ul class="nav nav-pills" a11y-role="menubar">
+                                        <li class="nav-item" a11y-role="none">
+                                            <a class="nav-link active" 
+                                               a11y-role="menuitem"
+                                               a11y-expanded="false"
+                                               href="#home">Home</a>
+                                        </li>
+                                        <li class="nav-item" a11y-role="none">
+                                            <a class="nav-link" 
+                                               a11y-role="menuitem"
+                                               href="#about">About</a>
+                                        </li>
+                                        <li class="nav-item dropdown" a11y-role="none">
+                                            <a class="nav-link dropdown-toggle" 
+                                               a11y-role="menuitem"
+                                               a11y-haspopup="menu"
+                                               a11y-expanded="false"
+                                               href="#"
+                                               data-bs-toggle="dropdown">
+                                                Services
+                                            </a>
+                                            <ul class="dropdown-menu" a11y-role="menu">
+                                                <li><a class="dropdown-item" a11y-role="menuitem" href="#service1">Service 1</a></li>
+                                                <li><a class="dropdown-item" a11y-role="menuitem" href="#service2">Service 2</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Code Examples:</h5>
+                                <pre class="bg-light p-2 rounded"><code>&lt;button a11y-role="button"
+        a11y-label="Save document changes"
+        a11y-description="This will save all current changes"
+        class="btn btn-primary"&gt;
+    💾 Save Document
+&lt;/button&gt;</code></pre>
+
+                                <pre class="bg-light p-2 rounded mt-3"><code>&lt;div a11y-role="progressbar"
+     a11y-valuemin="0"
+     a11y-valuemax="100"
+     a11y-valuenow="75"
+     a11y-valuetext="75% complete"&gt;
+    [Progress Bar]
+&lt;/div&gt;</code></pre>
+
+                                <pre class="bg-light p-2 rounded mt-3"><code>&lt;nav a11y-role="navigation" 
+     a11y-label="Main navigation"&gt;
+    &lt;ul a11y-role="menubar"&gt;
+        &lt;li a11y-role="menuitem"&gt;...&lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/nav&gt;</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Live Regions -->
+            <section class="mb-5">
+                <h2>Live Regions & Announcements</h2>
+                
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h4>Dynamic Content Updates</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Status Updates:</h5>
+                                <div class="mb-3">
+                                    <button class="btn btn-success" onclick="showSuccess()">Success Message</button>
+                                    <button class="btn btn-warning" onclick="showWarning()">Warning Message</button>
+                                    <button class="btn btn-danger" onclick="showError()">Error Message</button>
+                                </div>
+
+                                <div id="statusRegion" 
+                                     a11y-live="polite"
+                                     a11y-role="status"
+                                     class="alert d-none">
+                                </div>
+
+                                <h5 class="mt-4">Assertive Announcements:</h5>
+                                <div class="mb-3">
+                                    <button class="btn btn-primary" onclick="makeAssertiveAnnouncement()">
+                                        Important Alert
+                                    </button>
+                                </div>
+
+                                <div id="alertRegion"
+                                     a11y-live="assertive"
+                                     a11y-role="alert"
+                                     class="alert alert-danger d-none">
+                                </div>
+
+                                <h5 class="mt-4">Dynamic List:</h5>
+                                <div class="mb-3">
+                                    <button class="btn btn-outline-primary" onclick="addListItem()">Add Item</button>
+                                    <button class="btn btn-outline-danger" onclick="removeLastItem()">Remove Item</button>
+                                </div>
+
+                                <ul id="dynamicList" 
+                                    a11y-live="polite"
+                                    a11y-role="list"
+                                    class="list-group">
+                                    <li class="list-group-item" a11y-role="listitem">Initial Item 1</li>
+                                    <li class="list-group-item" a11y-role="listitem">Initial Item 2</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Screen Reader Behavior:</h5>
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <strong>aria-live="polite"</strong>
+                                        <br><small>Announces when user is idle</small>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>aria-live="assertive"</strong>
+                                        <br><small>Interrupts current speech</small>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>role="status"</strong>
+                                        <br><small>For status messages</small>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>role="alert"</strong>
+                                        <br><small>For urgent messages</small>
+                                    </li>
+                                </ul>
+
+                                <div class="mt-3">
+                                    <h6>Current Items Count:</h6>
+                                    <div class="badge bg-primary" id="itemCount">2</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Focus Management -->
+            <section class="mb-5">
+                <h2>Focus Management & Keyboard Navigation</h2>
+                
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h4>Modal Dialog Example</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <button class="btn btn-primary" onclick="openModal()">
+                                    Open Accessible Modal
+                                </button>
+
+                                <!-- Modal -->
+                                <div id="accessibleModal" 
+                                     class="modal fade" 
+                                     tabindex="-1"
+                                     a11y-role="dialog"
+                                     a11y-label="Settings Dialog"
+                                     a11y-focus="auto"
+                                     a11y-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Accessible Settings</h5>
+                                                <button type="button" 
+                                                        class="btn-close" 
+                                                        onclick="closeModal()"
+                                                        a11y-label="Close dialog">
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form>
+                                                    <div class="mb-3">
+                                                        <label for="settingName" class="form-label">Setting Name</label>
+                                                        <input type="text" id="settingName" class="form-control" value="Sample Setting">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="settingValue" class="form-label">Value</label>
+                                                        <input type="text" id="settingValue" class="form-control" value="Sample Value">
+                                                    </div>
+                                                    <div class="mb-3 form-check">
+                                                        <input type="checkbox" id="settingEnabled" class="form-check-input" checked>
+                                                        <label for="settingEnabled" class="form-check-label">Enable this setting</label>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                                                <button type="button" class="btn btn-primary" onclick="saveAndClose()">Save Changes</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h5 class="mt-4">Tabbed Interface:</h5>
+                                <div a11y-role="tablist" class="nav nav-tabs">
+                                    <button class="nav-link active" 
+                                            a11y-role="tab"
+                                            a11y-controls="tab1"
+                                            a11y-selected="true"
+                                            id="tab1-btn"
+                                            onclick="switchTab('tab1')">
+                                        General
+                                    </button>
+                                    <button class="nav-link" 
+                                            a11y-role="tab"
+                                            a11y-controls="tab2"
+                                            a11y-selected="false"
+                                            id="tab2-btn"
+                                            onclick="switchTab('tab2')">
+                                        Advanced
+                                    </button>
+                                    <button class="nav-link" 
+                                            a11y-role="tab"
+                                            a11y-controls="tab3"
+                                            a11y-selected="false"
+                                            id="tab3-btn"
+                                            onclick="switchTab('tab3')">
+                                        Privacy
+                                    </button>
+                                </div>
+
+                                <div id="tab1" 
+                                     a11y-role="tabpanel"
+                                     a11y-labelledby="tab1-btn"
+                                     class="tab-pane active p-3 border border-top-0">
+                                    <h6>General Settings</h6>
+                                    <p>Configure general application preferences.</p>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="notifications">
+                                        <label class="form-check-label" for="notifications">Enable notifications</label>
+                                    </div>
+                                </div>
+
+                                <div id="tab2" 
+                                     a11y-role="tabpanel"
+                                     a11y-labelledby="tab2-btn"
+                                     a11y-hidden="true"
+                                     class="tab-pane p-3 border border-top-0 d-none">
+                                    <h6>Advanced Settings</h6>
+                                    <p>Configure advanced application features.</p>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="debug">
+                                        <label class="form-check-label" for="debug">Enable debug mode</label>
+                                    </div>
+                                </div>
+
+                                <div id="tab3" 
+                                     a11y-role="tabpanel"
+                                     a11y-labelledby="tab3-btn"
+                                     a11y-hidden="true"
+                                     class="tab-pane p-3 border border-top-0 d-none">
+                                    <h6>Privacy Settings</h6>
+                                    <p>Manage your privacy and data preferences.</p>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="analytics">
+                                        <label class="form-check-label" for="analytics">Allow analytics</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>Accessibility Features:</h5>
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <strong>Focus Trapping</strong>
+                                        <br><small>Focus stays within modal</small>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Escape Key</strong>
+                                        <br><small>Press Escape to close</small>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Tab Navigation</strong>
+                                        <br><small>Arrow keys navigate tabs</small>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Screen Reader Labels</strong>
+                                        <br><small>Proper ARIA labels</small>
+                                    </li>
+                                </ul>
+
+                                <div class="mt-3">
+                                    <h6>Keyboard Shortcuts:</h6>
+                                    <ul class="list-unstyled small">
+                                        <li><kbd>Tab</kbd> - Navigate elements</li>
+                                        <li><kbd>Escape</kbd> - Close modal</li>
+                                        <li><kbd>←→</kbd> - Navigate tabs</li>
+                                        <li><kbd>Space</kbd> - Activate button</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Form Accessibility -->
+            <section class="mb-5">
+                <h2>Accessible Forms</h2>
+                
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h4>Form Validation & Error Handling</h4>
+                    </div>
+                    <div class="card-body">
+                        <form id="accessibleForm" onsubmit="return validateAccessibleForm(event)">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">
+                                            Email Address <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="email" 
+                                               id="email" 
+                                               name="email"
+                                               class="form-control"
+                                               a11y-describedby="email-help email-error"
+                                               required>
+                                        <div id="email-help" class="form-text">
+                                            We'll never share your email with anyone else.
+                                        </div>
+                                        <div id="email-error" 
+                                             a11y-live="polite" 
+                                             a11y-role="alert"
+                                             class="invalid-feedback">
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="phone" class="form-label">Phone Number</label>
+                                        <input type="tel" 
+                                               id="phone" 
+                                               name="phone"
+                                               class="form-control"
+                                               a11y-describedby="phone-help"
+                                               pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
+                                        <div id="phone-help" class="form-text">
+                                            Format: 123-456-7890
+                                        </div>
+                                    </div>
+
+                                    <fieldset class="mb-3">
+                                        <legend class="form-label">Preferred Contact Method</legend>
+                                        <div class="form-check">
+                                            <input class="form-check-input" 
+                                                   type="radio" 
+                                                   name="contact" 
+                                                   id="contactEmail" 
+                                                   value="email" 
+                                                   checked>
+                                            <label class="form-check-label" for="contactEmail">Email</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" 
+                                                   type="radio" 
+                                                   name="contact" 
+                                                   id="contactPhone" 
+                                                   value="phone">
+                                            <label class="form-check-label" for="contactPhone">Phone</label>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="message" class="form-label">Message</label>
+                                        <textarea id="message" 
+                                                  name="message"
+                                                  class="form-control" 
+                                                  rows="4"
+                                                  a11y-describedby="message-help"></textarea>
+                                        <div id="message-help" class="form-text">
+                                            Tell us how we can help you.
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" 
+                                                   type="checkbox" 
+                                                   id="terms" 
+                                                   name="terms"
+                                                   a11y-describedby="terms-error">
+                                            <label class="form-check-label" for="terms">
+                                                I agree to the terms and conditions *
+                                            </label>
+                                            <div id="terms-error" 
+                                                 a11y-live="polite" 
+                                                 a11y-role="alert"
+                                                 class="invalid-feedback">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary">
+                                        Submit Form
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</div>
+
+<style>
+.tab-pane {
+    min-height: 120px;
+}
+</style>
+
+<script>
+let itemCounter = 2;
+let currentProgress = @Model.ProgressValue;
+
+// Live region functions
+function showSuccess() {
+    const region = document.getElementById('statusRegion');
+    region.className = 'alert alert-success';
+    region.textContent = '✅ Operation completed successfully!';
+    region.classList.remove('d-none');
+}
+
+function showWarning() {
+    const region = document.getElementById('statusRegion');
+    region.className = 'alert alert-warning';
+    region.textContent = '⚠️ Warning: Please check your input.';
+    region.classList.remove('d-none');
+}
+
+function showError() {
+    const region = document.getElementById('statusRegion');
+    region.className = 'alert alert-danger';
+    region.textContent = '❌ Error: Something went wrong.';
+    region.classList.remove('d-none');
+}
+
+function makeAssertiveAnnouncement() {
+    const region = document.getElementById('alertRegion');
+    region.textContent = '🚨 URGENT: System maintenance in 5 minutes!';
+    region.classList.remove('d-none');
+    
+    setTimeout(() => {
+        region.classList.add('d-none');
+    }, 5000);
+}
+
+function addListItem() {
+    itemCounter++;
+    const list = document.getElementById('dynamicList');
+    const li = document.createElement('li');
+    li.className = 'list-group-item';
+    li.setAttribute('role', 'listitem');
+    li.textContent = `Dynamic Item ${itemCounter}`;
+    list.appendChild(li);
+    
+    updateItemCount();
+}
+
+function removeLastItem() {
+    const list = document.getElementById('dynamicList');
+    const items = list.querySelectorAll('li');
+    if (items.length > 2) {
+        items[items.length - 1].remove();
+        updateItemCount();
+    }
+}
+
+function updateItemCount() {
+    const list = document.getElementById('dynamicList');
+    const count = list.querySelectorAll('li').length;
+    document.getElementById('itemCount').textContent = count;
+}
+
+function updateProgress() {
+    currentProgress = Math.min(currentProgress + 10, 100);
+    const progressBar = document.querySelector('.progress-bar');
+    const progressContainer = document.querySelector('[role="progressbar"]');
+    
+    progressBar.style.width = currentProgress + '%';
+    progressContainer.setAttribute('aria-valuenow', currentProgress);
+    progressContainer.setAttribute('aria-valuetext', currentProgress + '% complete');
+    
+    if (currentProgress >= 100) {
+        currentProgress = 0;
+    }
+}
+
+// Modal functions
+function openModal() {
+    const modal = document.getElementById('accessibleModal');
+    modal.classList.add('show');
+    modal.style.display = 'block';
+    modal.setAttribute('aria-hidden', 'false');
+    
+    // Focus first input
+    setTimeout(() => {
+        modal.querySelector('input').focus();
+    }, 100);
+}
+
+function closeModal() {
+    const modal = document.getElementById('accessibleModal');
+    modal.classList.remove('show');
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+}
+
+function saveAndClose() {
+    // Simulate save
+    showSuccess();
+    closeModal();
+}
+
+// Tab functions
+function switchTab(tabId) {
+    const tabs = document.querySelectorAll('[role="tab"]');
+    const panels = document.querySelectorAll('[role="tabpanel"]');
+    
+    // Update tabs
+    tabs.forEach(tab => {
+        tab.classList.remove('active');
+        tab.setAttribute('aria-selected', 'false');
+    });
+    
+    // Update panels
+    panels.forEach(panel => {
+        panel.classList.add('d-none');
+        panel.setAttribute('aria-hidden', 'true');
+    });
+    
+    // Activate selected
+    document.getElementById(tabId + '-btn').classList.add('active');
+    document.getElementById(tabId + '-btn').setAttribute('aria-selected', 'true');
+    document.getElementById(tabId).classList.remove('d-none');
+    document.getElementById(tabId).setAttribute('aria-hidden', 'false');
+}
+
+// Form validation
+function validateAccessibleForm(event) {
+    event.preventDefault();
+    
+    const email = document.getElementById('email');
+    const terms = document.getElementById('terms');
+    let valid = true;
+    
+    // Email validation
+    if (!email.value || !email.value.includes('@')) {
+        document.getElementById('email-error').textContent = 'Please enter a valid email address.';
+        email.classList.add('is-invalid');
+        valid = false;
+    } else {
+        document.getElementById('email-error').textContent = '';
+        email.classList.remove('is-invalid');
+        email.classList.add('is-valid');
+    }
+    
+    // Terms validation
+    if (!terms.checked) {
+        document.getElementById('terms-error').textContent = 'You must agree to the terms and conditions.';
+        terms.classList.add('is-invalid');
+        valid = false;
+    } else {
+        document.getElementById('terms-error').textContent = '';
+        terms.classList.remove('is-invalid');
+    }
+    
+    if (valid) {
+        showSuccess();
+    }
+    
+    return valid;
+}
+
+// Keyboard navigation for tabs
+document.addEventListener('keydown', function(event) {
+    if (event.target.getAttribute('role') === 'tab') {
+        const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+        const currentIndex = tabs.indexOf(event.target);
+        
+        if (event.key === 'ArrowRight') {
+            event.preventDefault();
+            const nextIndex = (currentIndex + 1) % tabs.length;
+            tabs[nextIndex].focus();
+            tabs[nextIndex].click();
+        } else if (event.key === 'ArrowLeft') {
+            event.preventDefault();
+            const prevIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+            tabs[prevIndex].focus();
+            tabs[prevIndex].click();
+        }
+    }
+});
+</script>

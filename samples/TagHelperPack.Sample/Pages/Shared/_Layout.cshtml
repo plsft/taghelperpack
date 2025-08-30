@@ -30,7 +30,20 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a asp-page="/Index">Home</a></li>
-                    <li><a href="https://github.com/DamianEdwards/TagHelperPack">GitHub</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Examples <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a asp-page="/Examples/Simple">Simple Examples</a></li>
+                            <li><a asp-page="/Examples/Index">All Examples</a></li>
+                            <li class="divider"></li>
+                            <li><a asp-page="/Examples/ReactInspired">React-Inspired</a></li>
+                            <li><a asp-page="/Examples/Accessibility">Accessibility</a></li>
+                            <li><a asp-page="/Examples/Performance">Performance</a></li>
+                            <li class="divider"></li>
+                            <li><a asp-page="/Examples/Complete">Complete Demo</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="https://github.com/plsft/taghelperpack">GitHub</a></li>
                 </ul>
             </div>
         </div>
